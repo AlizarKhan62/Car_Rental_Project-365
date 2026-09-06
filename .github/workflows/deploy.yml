@@ -1,0 +1,46 @@
+name: Deploy PakDrive365 to GoDaddy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ftp-deploy:
+    name: Generate config + Deploy over FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get the latest code
+        uses: actions/checkout@v4
+
+      - name: Generate real config.php from template (public site config)
+        run: |
+          sed \
+            -e "s#__DB_HOST__#${{ secrets.DB_HOST }}#g" \
+            -e "s#__DB_USER__#${{ secrets.DB_USER }}#g" \
+            -e "s#__DB_PASS__#${{ secrets.DB_PASS }}#g" \
+            -e "s#__DB_NAME__#${{ secrets.DB_NAME }}#g" \
+            carrental-updated/includes/config.template.php > carrental-updated/includes/config.php
+
+      - name: Generate real config.php from template (admin panel config)
+        run: |
+          sed \
+            -e "s#__DB_HOST__#${{ secrets.DB_HOST }}#g" \
+            -e "s#__DB_USER__#${{ secrets.DB_USER }}#g" \
+            -e "s#__DB_PASS__#${{ secrets.DB_PASS }}#g" \
+            -e "s#__DB_NAME__#${{ secrets.DB_NAME }}#g" \
+            carrental-updated/admin/includes/config.template.php > carrental-updated/admin/includes/config.php
+
+      - name: Upload to GoDaddy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: carrental-updated/
+          server-dir: public_html/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/config.template.php
