@@ -14,23 +14,29 @@ jobs:
       - name: Get the latest code
         uses: actions/checkout@v4
 
-      - name: Generate real config.php from template (public site config)
+      - name: Generate real config.php (public & admin)
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
         run: |
-          sed \
-            -e "s#__DB_HOST__#${{ secrets.DB_HOST }}#g" \
-            -e "s#__DB_USER__#${{ secrets.DB_USER }}#g" \
-            -e "s#__DB_PASS__#${{ secrets.DB_PASS }}#g" \
-            -e "s#__DB_NAME__#${{ secrets.DB_NAME }}#g" \
-            carrental-updated/includes/config.template.php > carrental-updated/includes/config.php
+          python3 -c "
+          import os
 
-      - name: Generate real config.php from template (admin panel config)
-        run: |
-          sed \
-            -e "s#__DB_HOST__#${{ secrets.DB_HOST }}#g" \
-            -e "s#__DB_USER__#${{ secrets.DB_USER }}#g" \
-            -e "s#__DB_PASS__#${{ secrets.DB_PASS }}#g" \
-            -e "s#__DB_NAME__#${{ secrets.DB_NAME }}#g" \
-            carrental-updated/admin/includes/config.template.php > carrental-updated/admin/includes/config.php
+          def replace_placeholders(template_path, output_path):
+              with open(template_path, 'r') as f:
+                  content = f.read()
+              content = content.replace('__DB_HOST__', os.environ['DB_HOST'])
+              content = content.replace('__DB_USER__', os.environ['DB_USER'])
+              content = content.replace('__DB_PASS__', os.environ['DB_PASS'])
+              content = content.replace('__DB_NAME__', os.environ['DB_NAME'])
+              with open(output_path, 'w') as f:
+                  f.write(content)
+
+          replace_placeholders('carrental-updated/includes/config.template.php', 'carrental-updated/includes/config.php')
+          replace_placeholders('carrental-updated/admin/includes/config.template.php', 'carrental-updated/admin/includes/config.php')
+          "
 
       - name: Upload to GoDaddy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
