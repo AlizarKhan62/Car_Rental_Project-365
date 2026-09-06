@@ -1,0 +1,16 @@
+# Database configuration & credentials containing sensitive info
+carrental-updated/includes/config.php
+
+# XAMPP / Local server runtime files
+*.log
+*.tmp
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE and Editor configurations
+.vscode/
+.idea/
+*.sublime-workspace
