@@ -1,6 +1,6 @@
 # Database configuration & credentials containing sensitive info
 carrental-updated/includes/config.php
-
+carrental-updated/admin/includes/config.php
 # XAMPP / Local server runtime files
 *.log
 *.tmp
