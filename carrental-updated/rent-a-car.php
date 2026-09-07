@@ -24,7 +24,7 @@ $heroHeading = $city->HeroHeading ? $city->HeroHeading : ('Best Rent a Car in ' 
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PakDrive365 - Car Rental | <?php echo htmlentities($pageTitle);?></title>
 <base href="<?php echo htmlentities(SITE_URL);?>">
 <!--Bootstrap -->

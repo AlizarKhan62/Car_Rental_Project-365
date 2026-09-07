@@ -8,7 +8,7 @@ error_reporting(0);
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PakDrive365 - Car Rental</title>
 <!--Bootstrap -->
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css">
