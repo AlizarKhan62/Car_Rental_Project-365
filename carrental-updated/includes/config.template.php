@@ -10,4 +10,15 @@ try {
 } catch (PDOException $e) {
     exit("Error: " . $e->getMessage());
 }
+
+
+// Base site URL, computed from the actual executing script (works correctly
+// even when a pretty URL like /rent-a-car-lahore/ is rewritten by .htaccess
+// to rent-a-car.php?city=lahore under the hood). Used as a <base href> on
+// pages reachable via pretty URLs, so existing relative paths keep working
+// unchanged everywhere else.
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+$root = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/') . '/';
+define('SITE_URL', $scheme . $_SERVER['HTTP_HOST'] . $root);
+
 ?>
