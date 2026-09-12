@@ -48,6 +48,28 @@ $query->execute();
 $lastInsertId = $dbh->lastInsertId();
 if($lastInsertId)
 {
+  // --- AUTOMATIC EMAIL NOTIFICATION CODE ---
+    $to = "support@pakdrive365.com.au";
+    $subject = "New Booking Request #" . $bookingno . " - PakDrive365";
+
+    $email_content = "You have received a new booking request on PakDrive365!\n\n";
+    $email_content .= "Booking Number: " . $bookingno . "\n";
+    $email_content .= "Customer Name: " . $customername . "\n";
+    $email_content .= "Customer Email: " . $customeremail . "\n";
+    $email_content .= "Customer Phone: " . $customerphone . "\n";
+    $email_content .= "Age: " . $customerage . "\n";
+    $email_content .= "License Type: " . $licensetype . "\n";
+    $email_content .= "Pickup City: " . $pickupcity . "\n";
+    $email_content .= "Drop-off City: " . $dropoffcity . "\n";
+    $email_content .= "From Date: " . $fromdate . "\n";
+    $email_content .= "To Date: " . $todate . "\n";
+
+    $headers = "From: webmaster@pakdrive365.com.au\r\n";
+    $headers .= "Reply-To: " . $customeremail . "\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+
+    @mail($to, $subject, $email_content, $headers);
+    // ----------------------------------------
 echo "<script>alert('Thank you! Your booking request has been received. Our team will contact you shortly to confirm.');</script>";
 echo "<script type='text/javascript'> document.location = 'vehical-details.php?vhid=".intval($vhid)."'; </script>";
 }
